@@ -20,7 +20,8 @@ module.exports = {
 
   afterInstall: function(options) {
     var statePath = path.join(options.rootFolder, 'state.js');
-    var blueprintName = camelCase(options.blueprintName) + 'Cursor';
+    var blueprintName = camelCase(options.blueprintName);
+    var blueprintCursor = blueprintName + 'Cursor';
 
     var file = File.load(statePath);
 
@@ -28,8 +29,8 @@ module.exports = {
       return Promise.reject('No appState in state.js file. Please create a new instance before adding a new cursor');
     }
 
-    if (!file.getVariable(blueprintName)) {
-      file.appendCode('export const ' + blueprintName + ' = appState.cursor([\'' + blueprintName + '\'])');
+    if (!file.getVariable(blueprintCursor)) {
+      file.appendCode('export const ' + blueprintCursor + ' = appState.cursor([\'' + blueprintName + '\']);');
     }
 
     return new Promise.fromNode(function(callback) {
