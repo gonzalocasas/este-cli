@@ -14,7 +14,7 @@ export default class {{className}} extends Component {
 import Component from '{{{folderPath}}}/component.react';
 import React from 'react';
 
-export default function {{camelName}}Component(BaseComponent) {
+export default function {{camelName}}{{^isDecorator}}Component{{/isDecorator}}(BaseComponent) {
 
   class {{className}} extends Component {
     render() {
