@@ -33,10 +33,11 @@ This command creates completely fresh `Este` project by cloning it from Github r
 ### Feature
 
 ```bash
-$ este-cli feature <name>
+$ este-cli feature <name> -p
 ```
 
-Wrapper running `store`, `action`, `page` and `translate` generators concurrently. Useful for quick feature scaffolding.
+Wrapper running `store`, `action`, and `translate` generators concurrently. Useful for quick feature scaffolding. When `-p` flag is supplied,
+generator will create a page as well.
 
 ### Page
 
@@ -62,7 +63,7 @@ $ este-cli action <name> [actionName]`
 
 Creates simple `[actionName]` action in `src/client/<name>/actions.js` and exports it. If `[actionName]` is nested, it will be converted to camelCase. If `actions.js` file is missing, it will be created. If `[actionName]` is not provided, only `actions.js` file is created.
 
-Action switch will be added to a store automatically. If store file does not exist, it will be created. If store file does not import actions, it will be imported. Generator understands both `* as actions` and `{action1, action2}` imports and is able to handle them all properly. 
+Action switch will be added to a store automatically. If store file does not exist, it will be created. If store file does not import actions, it will be imported. Generator understands both `* as actions` and `{action1, action2}` imports and is able to handle them all properly.
 
 ### Component
 
@@ -106,7 +107,7 @@ $ este-cli translate <name> [translations..]
 
 Creates a `<name>` property with empty object in `src/client/messages.js`. If the file is missing, it will be created.
 
-When comma separated sub-elements are provided as `[translations...]` (`este-cli translate todos name,description,title`), 
+When comma separated sub-elements are provided as `[translations...]` (`este-cli translate todos name,description,title`),
 nested properties will be created.
 
 If `<name>` is already a string, generator will warn you that adding properties to a string is forbidden. In such a case,

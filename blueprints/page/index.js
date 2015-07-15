@@ -6,7 +6,6 @@
 'use strict';
 
 var paramName = require('param-case');
-var camelCase = require('camel-case');
 var Blueprint = require('../../lib/models/blueprint');
 
 module.exports = {
@@ -14,7 +13,7 @@ module.exports = {
   locals: function(file, options) {
     return {
       cssName: paramName(options.blueprintName)
-    }
+    };
   },
   afterInstall: function(options) {
     return Blueprint.load('route').install(options);

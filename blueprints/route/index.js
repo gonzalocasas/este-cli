@@ -6,7 +6,8 @@
 'use strict';
 
 var Promise = require('bluebird');
-var Blueprint = require('../../lib/models/blueprint');
+var File = require('../../lib/models/file');
+var ImportDeclaration = require('../../lib/models/importDeclaration');
 var fs = require('fs');
 var recast = require('recast');
 var b = recast.types.builders;
@@ -23,61 +24,23 @@ module.exports = {
   afterInstall: function(options) {
 
     var storePath = path.join(options.rootFolder, 'routes.js');
-    var data = recast.parse(fs.readFileSync(storePath).toString());
+    var file = File.load(storePath);
 
-    var importPath = './pages/' + options.blueprintName + '.react';
-
-    // Find topmost route
-    var topMostRoute = null;
-
-    recast.visit(data.program.body, {
-
-      // Top most route will be the first JSXElement on the root level
-      visitJSXElement: function(jsxElement) {
-        topMostRoute = jsxElement;
-        return false;
-      }
-
-    });
-
+    var topMostRoute = file.getJSXElement();
     if (!topMostRoute) {
       return Promise.reject('No routes defined. Make sure at least topmost route is defined');
     }
 
-    // Check if page is already imported
-    var pageImport = false;
-
-    recast.visit(data.program.body, {
-
-      visitImportDeclaration: function(imports) {
-        if (imports.get('source').value.value === importPath) {
-          pageImport = imports;
-          this.abort();
-        }
-        return false;
-      }
-
-    });
-
-    var specifiers = null;
+    var importPath = './pages/' + options.blueprintName + '.react';
+    var pageImport = file.getImportDeclaration(importPath);
 
     // If not, add import statement
     if (!pageImport) {
-
-      var importStatement = b.importDeclaration(
-        [b.importDefaultSpecifier(
-          b.identifier(pascalCase(options.blueprintName))
-        )],
-        b.literal(importPath)
-      );
-
-      data.program.body.unshift(importStatement);
-
-      specifiers = importStatement.specifiers;
-
-    } else {
-      specifiers = pageImport.get('specifiers').value;
+      file.prependCode('import ' + pascalCase(options.blueprintName) + ' from \'' + importPath + '\';\n');
+      pageImport = file.getImportDeclaration(importPath);
     }
+
+    var specifiers = pageImport.specifiers;
 
     // Get class name from import to refer in a route
     var className = specifiers[0].id.name;
@@ -85,6 +48,7 @@ module.exports = {
     // Check if route is already defined
     var alreadyHasRoute = false;
 
+    // @TODO make JSXElement model
     recast.visit(topMostRoute, {
 
       // Check all {} expression in JSX to find {className}
@@ -106,13 +70,13 @@ module.exports = {
         b.jsxIdentifier('Route'),
         [
           b.jsxAttribute(
-            b.jsxIdentifier("handler"),
+            b.jsxIdentifier('handler'),
             b.jsxExpressionContainer(
               b.identifier(className)
             )
           ),
           b.jsxAttribute(
-            b.jsxIdentifier("path"),
+            b.jsxIdentifier('path'),
             b.literal(pathCase(options.blueprintName))
           )
         ],
@@ -124,9 +88,8 @@ module.exports = {
       topMostRoute.get('children').push(node, '\n');
     }
 
-    return new Promise.fromNode(function(callback) {
-      var modifiedElement = recast.print(data).code;
-      fs.writeFile(storePath, modifiedElement, callback);
+    Promise.fromNode(function(callback) {
+      fs.writeFile(storePath, file.print(), callback);
     });
 
   }

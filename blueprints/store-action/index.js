@@ -11,7 +11,6 @@ var path = require('path');
 var camelCase = require('camel-case');
 var File = require('../../lib/models/file');
 var fs = require('fs');
-var _ = require('lodash');
 
 module.exports = {
 
@@ -70,7 +69,7 @@ module.exports = {
       switchStatement.addSwitchCase(actionIdentifier);
     }
 
-    return new Promise.fromNode(function(callback) {
+    return Promise.fromNode(function(callback) {
       fs.writeFile(storePath, file.print(), callback);
     });
 
