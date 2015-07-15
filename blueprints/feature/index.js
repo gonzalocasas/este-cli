@@ -12,13 +12,26 @@ module.exports = {
 
   description: 'Generates new feature',
 
+  flags: [{
+    type: Boolean,
+    name: '-p, --page',
+    description: 'Generates new page with feature as well'
+  }],
+
   beforeInstall: function(options) {
-    return Promise.all([
-      Blueprint.load('store').install(options),
-      Blueprint.load('action').install(options),
-      Blueprint.load('page').install(options),
-      Blueprint.load('translate').install(options)
-    ]);
+    var blueprints = [
+      Blueprint.load('store'),
+      Blueprint.load('action'),
+      Blueprint.load('translate')
+    ];
+
+    if (options.flags.page) {
+      blueprints.push(Blueprint.load('page'));
+    }
+
+    return Promise.all(blueprints.map(function(blueprint) {
+      return blueprint.install(options);
+    }));
   }
 
 };
