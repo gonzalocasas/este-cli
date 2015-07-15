@@ -31,29 +31,29 @@
     "url": "https://github.com/grabbou"
   },
   "dependencies": {
-    "babel-core": "^5.6.16",
-    "bluebird": "^2.9.25",
+    "babel-core": "^5.6.20",
+    "bluebird": "^2.9.33",
     "camel-case": "^1.1.2",
-    "chalk": "^1.0.0",
+    "chalk": "^1.1.0",
     "child-process-promise": "^1.1.0",
     "cli-spinner": "^0.2.1",
     "commander": "^2.8.1",
     "core-object": "0.0.2",
-    "gulp": "^3.8.11",
+    "gulp": "^3.9.0",
     "gulp-conflict": "^0.4.0",
     "gulp-if": "^1.2.5",
     "gulp-ignore": "^1.2.1",
-    "lodash": "^3.9.2",
-    "map-stream": "0.0.5",
+    "lodash": "^3.10.0",
+    "map-stream": "0.0.6",
     "mkdirp": "^0.5.1",
-    "mustache": "^2.0.0",
+    "mustache": "^2.1.2",
     "param-case": "^1.1.1",
     "pascal-case": "^1.1.1",
     "path-case": "^1.1.1",
-    "recast": "^0.10.16",
-    "require-directory": "^2.1.0",
-    "rimraf": "^2.3.4",
-    "sinon": "^1.14.1",
+    "recast": "^0.10.21",
+    "require-directory": "^2.1.1",
+    "rimraf": "^2.4.1",
+    "sinon": "^1.15.4",
     "update-notifier": "^0.5.0"
   },
   "engines": {
@@ -61,8 +61,8 @@
   },
   "preferGlobal": true,
   "devDependencies": {
-    "chai": "^2.3.0",
-    "istanbul": "^0.3.14",
+    "chai": "^3.0.0",
+    "istanbul": "^0.3.17",
     "mocha": "^2.2.5"
   }
 }
