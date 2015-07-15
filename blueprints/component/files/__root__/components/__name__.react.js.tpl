@@ -1,7 +1,7 @@
-{{#isPlainComponent}}
 import Component from '{{{folderPath}}}/component.react';
 import React from 'react';
 
+{{#isPlainComponent}}
 export default class {{className}} extends Component {
 
   render() {
@@ -11,9 +11,7 @@ export default class {{className}} extends Component {
 }
 {{/isPlainComponent}}
 {{^isPlainComponent}}
-import Component from '{{{folderPath}}}/component.react';
-import React from 'react';
-
+{{^isDecorator}}
 export default function {{camelName}}Component(BaseComponent) {
 
   class {{className}} extends Component {
@@ -27,4 +25,21 @@ export default function {{camelName}}Component(BaseComponent) {
   return {{className}};
 
 }
+{{/isDecorator}}
+{{#isDecorator}}
+export default function {{camelName}}() {
+    return function decorator(BaseComponent) {
+        return class {{className}} extends Component {
+
+            render() {
+                return <BaseComponent {...this.props} />;
+            }
+        };
+    }
+
+    {{className}}.displayName = `${BaseComponent.name}{{className}}`;
+
+    return {{className}};
+}
+{{/isDecorator}}
 {{/isPlainComponent}}
